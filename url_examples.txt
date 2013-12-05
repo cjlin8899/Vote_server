@@ -1,0 +1,12 @@
+http://localhost/vote/index.php/api/survey_c/surveys/format/json
+http://localhost/vote/index.php/api/survey_c/surveys/survey/s_id/format/json
+
+http://localhost/vote/index.php/api/user_c/users/format/json
+http://localhost/vote/index.php/api/user_c/user/usr_id/1/format/json
+
+Example of pattern for our Vote application Server->Smartphone JSON objects:
+{
+	"v_status" : "OK", 																	/* our internal status, OK, BAD_REQUEST */
+	"v_message" : "USERS_FOUND",														/* our internal more detail server message */
+	"v_data" : *** some data in form of arrays, another JSON objects and so on *** 		/* data */
+}
