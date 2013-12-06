@@ -1,12 +1,21 @@
 http://localhost/vote/index.php/api/survey_c/surveys/format/json
 http://localhost/vote/index.php/api/survey_c/surveys/survey/s_id/format/json
+http://localhost/vote/index.php/api/survey_c/surveys_by_creator/s_creator/2/format/json
+/* surveys according to keywords bound with them; according to keyword with name column "product" following surveys were found (as a resutl) */
+http://localhost/vote/index.php/api/survey_c/surveys_by_ids/k_name/product/format/json
+
 
 http://localhost/vote/index.php/api/user_c/users/format/json
 http://localhost/vote/index.php/api/user_c/user/usr_id/1/format/json
 
+http://localhost/vote/index.php/api/question_c/questions_by_survey/q_survey/1/format/json
+
 Example of pattern for our Vote application Server->Smartphone JSON objects:
 {
-	"v_status" : "OK", 																	/* our internal status, OK, BAD_REQUEST */
-	"v_message" : "USERS_FOUND",														/* our internal more detail server message */
-	"v_data" : *** some data in form of arrays, another JSON objects and so on *** 		/* data */
+	"v_status" : "OK", 								/* our internal status, OK, BAD_REQUEST */
+	"v_message" : "USERS_FOUND",							/* our internal more detail server message */
+	"v_data" : *** some data in form of arrays, another JSON objects and so on *** 	/* data */
 }
+
+/* very important URL used for retrieving complete survey including survey details, all questions belonging to survey and all question_answers belonging to questions of a survey */
+http://localhost/vote/index.php/api/common_c/full_survey_by_id/s_id/2/format/json

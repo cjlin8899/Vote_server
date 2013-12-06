@@ -1,18 +1,6 @@
 <?php
 class User_model extends CI_Model {
 
-	var $id_user          = '';
-	var $nick             = '';
-	var $firstname        = '';
-	var $lastname         = '';
-	var $phone            = '';
-	var $email		      = '';
-	var $gender		  	  = '';
-	var $last_login   	  = ''; // TODO
-	var $password		  = '';
-	var $fk_id_wallet	  = '';
-	var $fk_id_user_goup  = '';
-
 	public function __construct()
 	{	
 		//$this->load->database();
@@ -29,9 +17,12 @@ class User_model extends CI_Model {
 			return NULL;
 		}
 		
-		return $query;
+		return $query->result();
 	}
 	
+	/*
+	 * Returns the single user as an object.
+	 */
 	public function get_by_id( $usr_id )
 	{
 
@@ -42,7 +33,7 @@ class User_model extends CI_Model {
 			return NULL;
 		}
 		
-		return $query;
+		return $query->row();
 	}
 }
 

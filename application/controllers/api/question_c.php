@@ -4,30 +4,30 @@
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 require APPPATH.'/libraries/REST_Controller.php';
 
-class User_c extends REST_Controller
+class Question_c extends REST_Controller
 {
-	function user_get()
+	function question_get()
     {
-        if (!$this->get('usr_id'))
+        if (!$this->get('q_id'))
         {
 				$this->response(  
 					array(
 						'v_status' => 'BAD_REQUEST',
-						'v_message' => 'BAD_PARAMETER_USER_ID',
+						'v_message' => 'BAD_PARAMETER_QUESTION_ID',
 						'v_data' => NULL
 						), 
 					400
 					);
         }
     	
-    	$user = $this->user_model->get_by_id( $this->get('usr_id') );
+    	$question = $this->question_model->get_by_id( $this->get('q_id') );
     	
-        if ($user == NULL)
+        if ($question == NULL)
         {
 			$this->response(  
 				array(
 					'v_status' => 'OK',
-					'v_message' => 'USER_NOT_FOUND',
+					'v_message' => 'QUESTION_NOT_FOUND',
 					'v_data' => NULL
 					), 
 				200
@@ -38,8 +38,8 @@ class User_c extends REST_Controller
 		$this->response(  
 			array(
 				'v_status' => 'OK',
-				'v_message' => 'USER_FOUND',
-				'v_data' => $user
+				'v_message' => 'QUESTION_FOUND',
+				'v_data' => $question
 				), 
 			200
 			);
@@ -58,20 +58,20 @@ class User_c extends REST_Controller
     	//$this->some_model->deletesomething( $this->get('id') );
         $message = array('id' => $this->get('id'), 'message' => 'DELETED!');
         
-        $this->response($message, 200); // 200 being the HTTP response code
+        $this->response($message, 200);
     }
     
-    function users_get()
+    function questions_get()
     {
-
-		$all_users = $this->user_model->get_all();
-
-        if( $all_users == NULL )
+		
+		$all_questions = $this->question_model->get_all();
+        
+        if( $all_questions == NULL )
         {
 				$this->response(  
 					array(
 						'v_status' => 'OK',
-						'v_message' => 'NO_USERS_FOUND',
+						'v_message' => 'NO_QUESTIONS_FOUND',
 						'v_data' => NULL
 						), 
 					200
@@ -80,13 +80,52 @@ class User_c extends REST_Controller
 				$this->response(  
 					array(
 						'v_status' => 'OK',
-						'v_message' => 'USERS_FOUND',
-						'v_data' => $all_users
+						'v_message' => 'QUESTIONS_FOUND',
+						'v_data' => $all_questions
 						), 
 					200
 					);
 		}
     }
+    
+    function questions_by_survey_get()
+   {
+        if (!$this->get('q_survey'))
+        {
+				$this->response(  
+					array(
+						'v_status' => 'BAD_REQUEST',
+						'v_message' => 'BAD_PARAMETER_SURVEY_ID',
+						'v_data' => NULL
+						), 
+					400
+					);
+        }
+    	
+    	$questions = $this->question_model->get_by_survey_id( $this->get('q_survey') );
+    	
+        if ($questions == NULL)
+        {
+			$this->response(  
+				array(
+					'v_status' => 'OK',
+					'v_message' => 'QUESTIONS_NOT_FOUND',
+					'v_data' => NULL
+					), 
+				200
+				);
+				return;
+        }
+
+		$this->response(  
+			array(
+				'v_status' => 'OK',
+				'v_message' => 'QUESTIONS_FOUND',
+				'v_data' => $questions
+				), 
+			200
+			);
+    }   
 
 
 	public function send_post()
