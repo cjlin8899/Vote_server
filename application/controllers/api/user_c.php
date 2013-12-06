@@ -93,6 +93,56 @@ class User_c extends REST_Controller
 	{
 		var_dump($this->request->body);
 	}
+	
+    function add_post()  
+    {          
+        // retrieve call arguments
+        $data = $this->_post_args;
+        
+        // parse user from passed data
+        $new_user = $data;
+        
+        // try to insert new user
+        $b_result = $this->user_model->put( $new_user );
+        
+        // check result
+        if ( $b_result == FALSE )
+        {
+			$this->response(  
+				array(
+					'v_status' => 'OK',
+					'v_message' => 'USER_ALREADY_EXISTS',
+					'v_data' => NULL
+					), 
+				200
+				);
+				return;
+		}
+        
+    	$checked_user = $this->user_model->get_by_id( $data['usr_id'] );
+    	
+        if ($checked_user == NULL)
+        {
+			$this->response(  
+				array(
+					'v_status' => 'OK',
+					'v_message' => 'USER_NOT_FOUND_BY_ID_CALLBACK_CALL',
+					'v_data' => NULL
+					), 
+				200
+				);
+				return;
+        }
+
+		$this->response(
+			array(
+				'v_status' => 'OK',
+				'v_message' => 'USER_INSERTED',
+				'v_data' => $checked_user
+				), 
+			200
+			);        
+    }	
 
 
 	public function send_put()

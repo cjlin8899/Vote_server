@@ -35,6 +35,17 @@ class User_model extends CI_Model {
 		
 		return $query->row();
 	}
+	
+	/*
+	 * Insert user. 
+	 * Resturns NULL if fails.
+	 **/
+	public function put( $new_user )
+	{
+		$res =	$this->db->insert('v_user', $new_user ); 
+		
+		return $res;
+	}
 }
 
 /* End of file user_model.php */
