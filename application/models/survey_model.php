@@ -66,6 +66,27 @@ class Survey_model extends CI_Model {
 		}
 		
 		return $query->result();
+	}
+	
+	/*
+	 * Insert survey. 
+	 * Resturns FALSE if fails.
+	 **/
+	public function put( $new_survey )
+	{
+		$res =	$this->db->insert('v_survey', $new_survey ); 
+		
+		if ( $res == FALSE || $res == NULL ){
+			return FALSE;
+		}
+		
+		$latest_id = $this->db->insert_id();
+		
+		if( $latest_id == 0  || $latest_id == FALSE){
+			return FALSE;
+		}
+		
+		return $latest_id;
 	}	
 }
 

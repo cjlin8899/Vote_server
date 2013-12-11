@@ -194,4 +194,85 @@ class Survey_c extends REST_Controller
 	{
 		var_dump($this->put('foo'));
 	}
+	
+    function add_post()  
+    {          
+
+		log_message('info', 'add_post' );
+	
+        // retrieve call arguments
+        // parse user from passed data
+        $new_survey = $this->_post_args;
+        
+        if( strcasecmp( $new_survey['s_type'] , 'GLOBAL' ) == 0  ){
+			
+			log_message('info', 'Transforming type of a survey from String \'GLOBAL\' to Number 0' );
+			$new_survey['s_type'] = '0';
+			
+		}else if( strcasecmp( $new_survey['s_type'] , 'LOCAL' ) == 0  ){
+			
+			log_message('info', 'Transforming type of a survey from String \'GLOBAL\' to Number 0' );
+			$new_survey['s_type'] = '1';
+			
+		}else{
+			
+			log_message('info', 'Type ' . print_r( $new_survey['s_type'], TRUE) . ' is unsupported.' );
+			$this->response(  
+				array(
+					'v_status' => 'OK',
+					'v_message' => 'UNSUPPORTED_SURVEY_TYPE',
+					'v_data' => NULL
+					), 
+				200
+				);
+				return;			
+		}
+        
+        
+		log_message('info', print_r($new_survey, TRUE) );
+		log_message('info', '****************************************************');
+        //log_message('info', print_r($this->request->body, TRUE) );
+		
+        // try to insert new user
+        $latest_id = $this->survey_model->put( $new_survey );
+        
+        // check result
+        if ( $latest_id == FALSE )
+        {
+			$this->response(  
+				array(
+					'v_status' => 'OK',
+					'v_message' => 'SURVEY_NOT_CREATED',
+					'v_data' => NULL
+					), 
+				200
+				);
+				return;
+		}
+        
+        //TODO: edit!
+    	$checked_survey = $this->survey_model->get_by_id( $latest_id );
+    	
+        if ($checked_survey == NULL)
+        {
+			$this->response(  
+				array(
+					'v_status' => 'OK',
+					'v_message' => 'SURVEY_NOT_FOUND_BY_ID_CALLBACK_CALL',
+					'v_data' => NULL
+					), 
+				200
+				);
+				return;
+        }
+
+		$this->response(
+			array(
+				'v_status' => 'OK',
+				'v_message' => 'SURVEY_INSERTED',
+				'v_data' => $checked_survey
+				), 
+			200
+			);        
+    }	
 }
