@@ -47,6 +47,11 @@ class Keyword_model extends CI_Model {
 		
 		return $query->result();
 	}	
+	
+	public function add_multiple_keyword( $keywords ){
+
+		$this->db->insert_batch('v_keyword', $keywords ); 
+	}	
 }
 
 /* End of file keyword_model.php */

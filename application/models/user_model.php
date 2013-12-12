@@ -44,8 +44,18 @@ class User_model extends CI_Model {
 	{
 		$res =	$this->db->insert('v_user', $new_user ); 
 		
-		return $res;
-	}
+		if ( $res == FALSE || $res == NULL ){
+			return FALSE;
+		}
+		
+		$latest_id = $this->db->insert_id();
+		
+		if( $latest_id == 0  || $latest_id == FALSE){
+			return FALSE;
+		}
+		
+		return $latest_id;
+	}	
 }
 
 /* End of file user_model.php */

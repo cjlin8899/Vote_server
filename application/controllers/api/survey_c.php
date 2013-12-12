@@ -202,21 +202,29 @@ class Survey_c extends REST_Controller
 	
         // retrieve call arguments
         // parse user from passed data
-        $new_survey = $this->_post_args;
+        $client_message =  $this->_post_args;
+		
+        $new_survey = json_decode( $client_message['v_survey'] ) ;
+        $new_keywords = $client_message['v_keywords'];
+		
+        log_message('info', '******************************************************************************************');
+        log_message('info', print_r($new_survey, TRUE) );
+		log_message('info', print_r($new_keywords, TRUE) );
+		log_message('info', '******************************************************************************************');		
         
-        if( strcasecmp( $new_survey['s_type'] , 'GLOBAL' ) == 0  ){
+        if( strcasecmp( $new_survey->s_type , 'GLOBAL' ) == 0  ){
 			
 			log_message('info', 'Transforming type of a survey from String \'GLOBAL\' to Number 0' );
-			$new_survey['s_type'] = '0';
+			$new_survey->s_type = '0';
 			
-		}else if( strcasecmp( $new_survey['s_type'] , 'LOCAL' ) == 0  ){
+		}else if( strcasecmp( $new_survey->s_type, 'LOCAL' ) == 0  ){
 			
 			log_message('info', 'Transforming type of a survey from String \'GLOBAL\' to Number 0' );
-			$new_survey['s_type'] = '1';
+			$new_survey->s_type = '1';
 			
 		}else{
 			
-			log_message('info', 'Type ' . print_r( $new_survey['s_type'], TRUE) . ' is unsupported.' );
+			log_message('info', 'Type ' . print_r( $new_survey->s_type, TRUE) . ' is unsupported.' );
 			$this->response(  
 				array(
 					'v_status' => 'OK',
@@ -227,14 +235,11 @@ class Survey_c extends REST_Controller
 				);
 				return;			
 		}
-        
-        
-		log_message('info', print_r($new_survey, TRUE) );
-		log_message('info', '****************************************************');
-        //log_message('info', print_r($this->request->body, TRUE) );
 		
         // try to insert new user
         $latest_id = $this->survey_model->put( $new_survey );
+		
+		log_message('info', 'latest_id ' . print_r($latest_id, TRUE) );
         
         // check result
         if ( $latest_id == FALSE )
@@ -265,7 +270,33 @@ class Survey_c extends REST_Controller
 				);
 				return;
         }
+        
+        $new_keywords_updated = array();
+        //$checked_survey['s_id']
+		
+	$data_kwrds = array(
+		array(
+			'title' => 'My title' ,
+			'name' => 'My Name' ,
+			'date' => 'My date'
+		),
+		array(
+			'title' => 'Another title' ,
+			'name' => 'Another Name' ,
+			'date' => 'Another date'
+		)
+	);		log_message('info', 'Survey after update: ' . print_r($data_kwrds, TRUE) );
+		
+		foreach ($new_keywords as $single_keyword) {
 
+			
+			array_push( $new_keywords_updated, array('k_name' => $single_keyword, 'k_survey' => $checked_survey->s_id ) );
+		}
+		
+		log_message('info', 'Survey after update: ' . print_r($new_keywords_updated, TRUE) );
+
+		$this->keyword_model->add_multiple_keyword( $new_keywords_updated );
+		
 		$this->response(
 			array(
 				'v_status' => 'OK',
